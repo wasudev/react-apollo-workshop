@@ -1,5 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import { 
+  ApolloClient, 
+  createNetworkInterface,
+  ApolloProvider
+} from 'react-apollo'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+import routes from './routes'
+
+const networkInterface = createNetworkInterface({ 
+  uri: 'https://api.graph.cool/simple/v1/cj57mktdeuv3b0118yimnc16w' 
+})
+
+const client = new ApolloClient({
+  networkInterface,
+})
+
+ReactDOM.render(
+  <ApolloProvider  client={client}>
+    { routes() }
+  </ApolloProvider>, 
+  document.getElementById('root'))
