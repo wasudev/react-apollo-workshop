@@ -85,7 +85,7 @@ const queryComments = gql`
 `
 
 const createComment = gql`
-  mutation createComment($author: String!, $message: String!, $ownerId: ID!) {
+  mutation ($author: String!, $message: String!, $ownerId: ID!) {
     createComment (
       author: $author
       message: $message
