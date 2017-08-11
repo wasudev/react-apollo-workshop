@@ -1,49 +1,85 @@
 import React from 'react'
-import { graphql, gql, compose } from 'react-apollo'
+import axios from 'axios'
 import moment from 'moment'
 
 import './CommentPanel.css'
 
 class CommentPanel extends React.Component {
   state = {
+    loading: true,
     author: '',
-    message: ''
+    message: '',
+    comments: []
+  }
+
+  componentDidMount() {
+    this.getMember(this.props.memberId)  
+  }
+
+  getMember = (memberId) => {
+    axios.post('https://api.graph.cool/simple/v1/cj57mktdeuv3b0118yimnc16w', {
+      query: `
+        query ($memberId: ID!) {
+          allComments(filter: { owner: { id: $memberId } }, orderBy: createdAt_DESC) {
+            id
+            author
+            message
+            createdAt
+          }
+        }
+      `,
+      variables: {
+        memberId
+      },
+      operationName: ''
+    })
+      .then(res => {
+        this.setState({
+          loading: false,
+          comments: res.data.data.allComments
+        })
+      })
   }
 
   handlePost = () => {
-    this.props.createComment({
-      variables: { 
+    axios.post('https://api.graph.cool/simple/v1/cj57mktdeuv3b0118yimnc16w', {
+      query: `
+        mutation createComment($author: String!, $message: String!, $ownerId: ID!) {
+          createComment (
+            author: $author
+            message: $message
+            ownerId: $ownerId
+          ) {
+            author
+            message
+          }
+        }
+      `,
+      variables: {
         author: this.state.author,
         message: this.state.message,
         ownerId: this.props.memberId
       },
-      refetchQueries: [
-        {
-          query: queryComments,
-          variables: {
-            memberId: this.props.memberId 
-          }
-        }
-      ]
+      operationName: ''
     })
-    .then(() => {
-      // this.props.queryComments.refetch()
-      this.setState({
-        author: '',
-        message: ''
+      .then(res => {
+        this.setState({
+          author: '',
+          message: ''
+        })
+        this.getMember(this.props.memberId)
       })
-    })
   }
 
   render() {
-    if (this.props.queryComments.loading) {
+    if (this.state.loading) {
       return <h1>Loading</h1>
     }
     return (
       <div>
         <div className="comment-panel">
           {
-            this.props.queryComments.allComments.map(comment => 
+            this.state.comments.map(comment => 
               <article key={comment.id} className="message is-info _m-b-15">
                 <div className="message-body">
                   {comment.author}: {comment.message}  
@@ -73,41 +109,4 @@ class CommentPanel extends React.Component {
   }
 }
 
-const queryComments = gql`
-  query ($memberId: ID!) {
-    allComments(filter: { owner: { id: $memberId } }, orderBy: createdAt_DESC) {
-      id
-      author
-      message
-      createdAt
-    }
-  }
-`
-
-const createComment = gql`
-  mutation createComment($author: String!, $message: String!, $ownerId: ID!) {
-    createComment (
-      author: $author
-      message: $message
-      ownerId: $ownerId
-    ) {
-      author
-      message
-    }
-  }
-`
-
-export default compose(
-  graphql(queryComments, {
-    name: 'queryComments',
-    options: (props) => ({
-      variables: { 
-        memberId: props.memberId
-      }
-    }),
-    options: { pollInterval: 5000 },
-  }),
-  graphql(createComment, {
-   name: 'createComment'
-  }),
-  )(CommentPanel)
+export default CommentPanel
