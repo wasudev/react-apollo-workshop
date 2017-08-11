@@ -49,10 +49,12 @@ const MemberItem = (props) => (
     </div>
     <footer className="card-footer">
       <p className="card-footer-item">
-        <i className="fa fa-thumbs-o-up _m-r-15" aria-hidden="true"></i> {props.likes.length}
+        <a className="item-description">
+          <i className="fa fa-thumbs-o-up _m-r-15" aria-hidden="true"></i> {props.likes.length}
+        </a>
       </p>
       <p className="card-footer-item">
-        <Link to={`/members/${props.id}/comments`} className="item-description">
+        <Link to={`/members/${props.id}/comments`}>
           <i className="fa fa-comment-o _m-r-15" aria-hidden="true"></i> {props.comments.length}
         </Link>
       </p>

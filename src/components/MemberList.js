@@ -11,9 +11,6 @@ class MemberList extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      loading: true,
-    })
     axios.post('https://api.graph.cool/simple/v1/cj57mktdeuv3b0118yimnc16w', {
       query: `
         query {
@@ -40,7 +37,6 @@ class MemberList extends React.Component {
       operationName: ''
     })
       .then(res => {
-        console.log(res)
         this.setState({
           loading: false,
           allMembers: res.data.data.allMembers

@@ -2,7 +2,7 @@
 
 ## Mutation
 ```
-mutation createLike($ownerId: ID!) {
+mutation ($ownerId: ID!) {
     createLike (
       ownerId: $ownerId
     ) {
@@ -14,7 +14,7 @@ mutation createLike($ownerId: ID!) {
 ## Query
 
 ```
-query allLikes($ownerId: ID!){
+query ($ownerId: ID!){
   allLikes(filter: { owner: { id: $ownerId } ) {
     id
   }
