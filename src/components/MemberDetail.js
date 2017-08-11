@@ -47,8 +47,6 @@ const queryMember = gql`
   }
 `
 
-
-
 export default graphql(queryMember, {    
     options: (props) => ({
       variables: { 
