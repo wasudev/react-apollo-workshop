@@ -1,52 +1,71 @@
 import React from 'react'
-import { graphql, gql } from 'react-apollo'
+import axios from 'axios'
 
 import MemberItem from './MemberItem'
 import './helper.css'
 
-const MemberList = (props) => { 
-  if (props.data.loading) {
-    return <h1>Loading</h1>
+class MemberList extends React.Component {
+  state = {
+    loading: true,
+    allMembers: []
   }
-  if(props.data.error) {
-    console.log(props.data.error)
-    return <h1>Error</h1>
+
+  componentDidMount() {
+    this.setState({
+      loading: true,
+    })
+    axios.post('https://api.graph.cool/simple/v1/cj57mktdeuv3b0118yimnc16w', {
+      query: `
+        query {
+          allMembers {
+            id
+            name
+            nickname
+            age
+            dob
+            fbAcc
+            igAcc
+            hobby
+            favorite
+            likes {
+              id
+            }
+            comments {
+              id
+            }
+          }
+        }
+      `,
+      variables: null,
+      operationName: ''
+    })
+      .then(res => {
+        console.log(res)
+        this.setState({
+          loading: false,
+          allMembers: res.data.data.allMembers
+        })
+      })
   }
-  return (
-    <div className="container is-fluid _p-t-30">
-      <div className="columns is-multiline">
-        {
-          props.data.allMembers.map(member =>  
-            <div key={`${member.id}`} className="column is-3">
-              <MemberItem {...member} />
-            </div>
-          )
-        } 
+
+  render() {
+    if (this.state.loading) {
+      return <h1>Loading</h1>
+    }
+    return (
+      <div className="container is-fluid _p-t-30">
+        <div className="columns is-multiline">
+          {
+            this.state.allMembers.map(member =>  
+              <div key={`${member.id}`} className="column is-3">
+                <MemberItem {...member} />
+              </div>
+            )
+          } 
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
-const query = gql`
-  query {
-    allMembers {
-      id
-      name
-      nickname
-      age
-      dob
-      fbAcc
-      igAcc
-      hobby
-      favorite
-      likes {
-        id
-      }
-      comments {
-        id
-      }
-    }
-  }
-`
-
-export default graphql(query)(MemberList)
+export default MemberList
