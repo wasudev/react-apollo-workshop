@@ -1,0 +1,10 @@
+.comment-panel {
+  height: 400px;
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+
+.comment-message-timestamp {
+  text-align: right;
+  font-size: 12px;
+}
