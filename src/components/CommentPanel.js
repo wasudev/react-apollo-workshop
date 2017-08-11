@@ -105,7 +105,7 @@ export default compose(
         memberId: props.memberId
       }
     }),
-    options: { pollInterval: 5000 },
+    // options: { pollInterval: 5000 },
   }),
   graphql(createComment, {
    name: 'createComment'
