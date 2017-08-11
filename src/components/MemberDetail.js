@@ -33,15 +33,6 @@ const MemberDetail = (props) => {
 const queryMember = gql`
   query ($id: ID!) {
     Member(id: $id) {
-      id
-      name
-      nickname
-      age
-      dob
-      fbAcc
-      igAcc
-      hobby
-      favorite
       videoUrl
     }
   }

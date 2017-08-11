@@ -39,9 +39,6 @@ const query = gql`
       igAcc
       hobby
       favorite
-      likes {
-        id
-      }
       comments {
         id
       }

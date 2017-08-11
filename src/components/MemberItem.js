@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import LikePanel from './LikePanel'
 import './MemberItem.css'
 
 const MemberItem = (props) => (
@@ -49,9 +50,7 @@ const MemberItem = (props) => (
     </div>
     <footer className="card-footer">
       <p className="card-footer-item">
-        <a className="item-description">
-          <i className="fa fa-thumbs-o-up _m-r-15" aria-hidden="true"></i> {props.likes.length}
-        </a>
+        <LikePanel ownerId={props.id} />
       </p>
       <p className="card-footer-item">
         <Link to={`/members/${props.id}/comments`} className="item-description">
